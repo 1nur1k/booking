@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->integer('client_id')->nullable()->constrained('clients');
-            $table->integer('room_id')->nullable()->constrained('rooms');
-            $table->dateTime('reservation_from')->nullable();
-            $table->dateTime('reservation_to')->nullable();
+            $table->unsignedBigInteger('room_id');
+            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('clients');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
         });
     }

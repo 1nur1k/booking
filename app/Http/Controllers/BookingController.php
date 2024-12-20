@@ -10,26 +10,24 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::all();
-        return $bookings;
     }
 
-    public function store(BookingCreateRequest $request)
+    public function store(BookingCreateRequest $bookingCreateRequest)
     {
 // перенести логику в сторе и доработать логику проверки брони
-        $data = $request->validated();
+        $data = $bookingCreateRequest->validated();
 
         // Получаем параметры из запроса
         $roomId = $data['room_id'];
         $clientId = $data['client_id'];
-        $reservationFrom = $data['reservation_from'];
-        $reservationTo = $data['reservation_to'];
+        $startdate = $data['start_date'];
+        $enddate = $data['end_date'];
 
         $isBooked = \App\Models\Booking::query()
             ->where('room_id', $roomId)
             ->where('client_id', $clientId)
-            ->where('reservation_from', $reservationFrom)
-            ->where('reservation_to', $reservationTo)
+            ->where('start_date', $startdate)
+            ->where('end_date', $enddate)
             ->exists();
 
         if (($isBooked)) {
@@ -40,8 +38,8 @@ class BookingController extends Controller
         $booking = new BookingController();
         $booking->client_id = $clientId;
         $booking->room_id = $roomId;
-        $booking->reservation_from = $reservationFrom;
-        $booking->reservation_to = $reservationTo;
+        $booking->start_date = $startdate;
+        $booking->end_date = $enddate;
         $booking->save();
 
 

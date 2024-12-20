@@ -22,12 +22,13 @@ class RoomCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'hotel_id' => 'required|exists:hotels,id',
-            'type' => 'required|string',
-            'bath' => 'required|boolean',
-            'breakfast' => 'required|boolean',
-            'rating' => 'nullable|numeric|min:0|max:10',
-            'status' => 'required|string|in:доступен,забронирован',
+            'hotel_id' => 'nullable|exists:hotels,id',
+            'type' => 'nullable|string',
+            'has_bathroom' => 'nullable|boolean',
+            'has_breakfast' => 'nullable|boolean',
+            'rating' => 'nullable|integer|min:0|max:5',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
             'price' => 'required|integer|min:0',
         ];
     }

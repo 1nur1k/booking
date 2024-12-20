@@ -2,29 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BookingCreateRequest;
 use App\Http\Requests\RoomCreateRequest;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
 {
-    public function index(RoomCreateRequest $roomCreateRequest)
+    public function index(RoomCreateRequest $roomCreateRequest, BookingCreateRequest $bookingCreateRequest)
     {
-        $rooms = Room::query();
+        $query = Room::query();
 
         if ($roomCreateRequest->has('type')) {
-            $rooms->where('type', $roomCreateRequest->type);
-        }
-        if ($roomCreateRequest->has('bath')) {
-            $rooms->where('bath', $roomCreateRequest->bath);
-        }
-        if ($roomCreateRequest->has('breakfast')) {
-            $rooms->where('breakfast', $roomCreateRequest->breakfast);
-        }
-        if ($roomCreateRequest->has('rating')) {
-            $rooms->where('rating','>=', $roomCreateRequest->rating);
+            $query->where('type', $roomCreateRequest->input('type'));
         }
 
-        return $rooms->get();
+        if ($roomCreateRequest->has('bathroom')) {
+            $query->where('has_bathroom', $roomCreateRequest->input('bathroom'));
+        }
+
+        if ($roomCreateRequest->has('breakfast')) {
+            $query->where('has_breakfast', $roomCreateRequest->input('breakfast'));
+        }
+
+        if ($bookingCreateRequest->has(['start_date', 'end_date']))
+        {
+            $start_date = $bookingCreateRequest->input('start_date');
+            $end_date = $bookingCreateRequest->input('end_date');
+
+            $query->whereDoesntHave('bookings', function ($checking) use ($start_date, $end_date) {
+                $checking->where('start_date', '<', $end_date)
+                    ->where('end_date', '>', $start_date);
+            });
+
+            $rooms = $query->get();
+
+            return response()->json($rooms);
+        }
     }
 }

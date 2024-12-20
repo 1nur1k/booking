@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->integer('hotel_id')->constrained('hotels');
             $table->string('type');
-            $table->string('bath');
-            $table->string('breakfast');
-            $table->integer('rating');
-            $table->string('status');
-            $table->integer('price');
+            $table->boolean('has_bathroom');
+            $table->boolean('has_breakfast');
+            $table->unsignedBigInteger('hotel_id');
+            $table->foreign('hotel_id')->references('id')->on('hotels');
             $table->timestamps();
         });
     }
