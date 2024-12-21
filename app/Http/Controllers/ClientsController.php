@@ -12,12 +12,13 @@ class ClientsController extends Controller
     //
     public function show()
     {
+        // Показываем информацию о клиенте
         $client = Clients::where('user_id', Auth::id())->first();
 
         if (!$client) {
             return response()->json(['error' => 'Client not found'], 404);
         }
-
+        // Показываем бронирования клиента
         $booking = Booking::where('user_id', Auth::id())->with('room')->get();
         if ($booking->isEmpty()) {
             return response()->json(['error' => 'Booking not found'], 404);

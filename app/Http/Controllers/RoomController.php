@@ -12,7 +12,7 @@ class RoomController extends Controller
     public function index(RoomCreateRequest $roomCreateRequest, BookingCreateRequest $bookingCreateRequest)
     {
         $query = Room::query();
-
+        // Создается фильтр
         if ($roomCreateRequest->has('type')) {
             $query->where('type', $roomCreateRequest->input('type'));
         }
