@@ -11,12 +11,12 @@ class Room extends Model
     //
     protected $table = 'rooms';
 
-    public function hotels(): BelongsTo
+    public function hotel(): BelongsTo
     {
         return $this->belongsTo(Hotel::class, 'hotel_id');
     }
 
-    public function bookings(): HasMany
+    public function booking(): HasMany
     {
         return $this->hasMany(Booking::class, 'room_id');
     }
